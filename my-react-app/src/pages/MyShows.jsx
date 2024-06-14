@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { auth, db } from '../firebase/firebase';
+import { doc, updateDoc, arrayUnion } from 'firebase/firestore';
 
 import background from '../assets/ConcertCrowdBGImage.jpg';
 
@@ -24,12 +26,22 @@ export default function MyShows() {
   ];
 
   const [showList, setShowList] = useState(shows);
-
-  function handleSubmit(showInfo) {
+  
+  const user = auth.currentUser;
+  
+  async function handleSubmit(showInfo) {
     console.log(showInfo);
     const tempShowList = [...showList];
     tempShowList.push(showInfo);
     setShowList(tempShowList);
+
+    if (auth.currentUser) {
+      const showRef = doc(db, 'users', user.uid);
+      await updateDoc(showRef, {
+        shows: arrayUnion(showInfo)
+    })
+    
+    }
     console.log(showInfo);
     // showList.sort((a, b) => {
     //   let aDate = a.date.split('/');

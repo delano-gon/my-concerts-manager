@@ -1,4 +1,59 @@
+import { useState } from 'react';
+import { NavLink, Navigate } from 'react-router-dom';
+import { doSignInWithEmailAndPassword } from '../firebase/auth';
+// import { auth } from '../firebase/firebase';
+// import { onAuthStateChanged } from 'firebase/auth';
+
 export default function Login() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [isSigningIn, setIsSigningIn] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+
+  // onAuthStateChanged(auth, (user) => {
+  //   if (user) {
+  //     console.log('User is signed in'); 
+  //   } else {
+  //     console.log('User is signed out');
+  //   }
+  // });
+
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    console.log(email);
+    console.log(password);
+    if(!isSigningIn) {
+      
+      doSignInWithEmailAndPassword(email, password).then((userCredential) => {
+        const user = userCredential.user;
+        console.log(user);
+        console.log('User logged in');
+        console.log(userCredential);
+        setIsSigningIn(true);
+      }).catch((error) => {
+        const errorCode = error.code;
+        setErrorMessage(error.message);
+        console.log(errorCode);
+        console.log(errorMessage);
+      })
+      setIsSigningIn(false);
+    } 
+    console.log(errorMessage);
+  };
+
+  // const onGoogleSignIn = (e) => {
+  //   e.preventDefault();
+  //   if(!isSigningIn) {
+  //     setIsSigningIn(true);
+  //     try {
+  //       doSignInWithEmailAndPassword(email, password);
+  //     } catch (error) {
+  //       setErrorMessage(error.message);
+  //     }
+  //     setIsSigningIn(false);
+  //   }
+  // };
+
   return (
     <>
       {/*
@@ -9,6 +64,7 @@ export default function Login() {
         <body class="h-full">
         ```
       */}
+      {isSigningIn && <Navigate to="/myshows" />}
       <div className="flex min-h-screen flex-1 flex-col justify-center px-6 py-6 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <img
@@ -29,12 +85,13 @@ export default function Login() {
               </label>
               <div className="mt-2">
                 <input
+                  value={email || ''} onChange={(e) => setEmail(e.target.value)}
                   id="email"
                   name="email"
                   type="email"
                   autoComplete="email"
                   required
-                  className="block w-full border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  className="block w-full border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 indent-2.5"
                 />
               </div>
             </div>
@@ -52,19 +109,20 @@ export default function Login() {
               </div>
               <div className="mt-2">
                 <input
+                  value={password || ''} onChange={(e) => setPassword(e.target.value)}
                   id="password"
                   name="password"
                   type="password"
                   autoComplete="current-password"
                   required
-                  className="block w-full border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  className="block w-full border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 indent-2.5"
                 />
               </div>
             </div>
 
             <div>
               <button
-                type="submit"
+                onClick={(e) => { onSubmit(e) }}
                 className="flex w-full justify-center bg-purple-900 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-purple-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-600"
               >
                 Sign in
@@ -74,9 +132,9 @@ export default function Login() {
 
           <p className="mt-10 text-center text-sm text-gray-300">
             Not a member?{' '}
-            <a href="#" className="font-semibold leading-6 text-purple-400 hover:text-white">
-              Start a 14 day free trial
-            </a>
+            <NavLink to="/createaccount" className="font-semibold leading-6 text-purple-400 hover:text-white">
+              Create a free account
+            </NavLink>
           </p>
         </div>
       </div>

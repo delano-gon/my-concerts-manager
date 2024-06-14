@@ -1,21 +1,51 @@
-import { Disclosure,  } from '@headlessui/react'
-import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
+import { useState } from 'react';
+import { Disclosure } from '@headlessui/react';
+import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 import { NavLink } from 'react-router-dom';
+import { auth } from '../firebase/firebase';
+import { doSignOut } from '../firebase/auth';
+import { onAuthStateChanged } from 'firebase/auth';
 
 // import profileIcon from '../assets/defaultprofileicon.jpg';
 
+
+
 const navigation = [
-  { name: 'Summary', href: '#', current: true },
-  { name: 'Add Show', href: '#', current: false },
+  { name: 'Summary', href: '/', current: true },
+  { name: 'Add Show', href: '/myshows', current: false },
   // { name: '', href: '#', current: false },
   // { name: 'Calendar', href: '#', current: false },
-]
+];
 
 function classNames(...classes) {
-  return classes.filter(Boolean).join(' ')
+  return classes.filter(Boolean).join(' ');
 }
 
 export default function NavBar() {
+  const [isSignedIn, setIsSignedIn] = useState(false);
+
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      console.log('User is signed in'); 
+      setIsSignedIn(true);
+    } else {
+      console.log('User is signed out');
+      setIsSignedIn(false);
+    }
+  });
+
+  function handleSignOut() {
+    doSignOut(auth)
+      .then(() => {
+        console.log('User signed out');
+        setIsSignedIn(false);
+      })
+      .catch((error) => {
+        console.log(error);
+        console.log(error.message);
+      });
+  }
+
   return (
     <Disclosure as="nav" className="bg-purple-900 top-0 sticky">
       {({ open }) => (
@@ -57,14 +87,30 @@ export default function NavBar() {
                         {item.name}
                       </a>
                     ))} */}
-                    <NavLink to="/" className="visited:bg-violet-700 text-gray-300 hover:bg-gray-800 hover:text-white px-3 py-2 text-md font-medium">Summary</NavLink>
-                    <NavLink to="/myshows" className="visited:bg-violet-700 text-gray-300 hover:bg-gray-800 hover:text-white px-3 py-2 text-md font-medium">Add Show</NavLink>
-                    <NavLink to="/mycalendar" className="visited:bg-violet-700 text-gray-300 hover:bg-gray-800 hover:text-white px-3 py-2 text-md font-medium">My Calendar</NavLink>
+                    <NavLink
+                      to="/"
+                      className="visited:bg-violet-700 text-gray-300 hover:bg-gray-800 hover:text-white px-3 py-2 text-md font-medium"
+                    >
+                      Summary
+                    </NavLink>
+                    <NavLink
+                      to="/myshows"
+                      className="visited:bg-violet-700 text-gray-300 hover:bg-gray-800 hover:text-white px-3 py-2 text-md font-medium"
+                    >
+                      Add Show
+                    </NavLink>
+                    <NavLink
+                      to="/mycalendar"
+                      className="visited:bg-violet-700 text-gray-300 hover:bg-gray-800 hover:text-white px-3 py-2 text-md font-medium"
+                    >
+                      My Calendar
+                    </NavLink>
                   </div>
                 </div>
               </div>
-              <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-                {/* <button
+              {!isSignedIn && (
+                <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+                  {/* <button
                   type="button"
                   className="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
                 >
@@ -72,10 +118,20 @@ export default function NavBar() {
                   <span className="sr-only">View notifications</span>
                   <BellIcon className="h-6 w-6" aria-hidden="true" />
                 </button> */}
-                <NavLink to="/login" className="visited:bg-violet-700 text-gray-300 hover:bg-gray-800 hover:text-white px-3 py-2 text-md font-medium mr-3">Login</NavLink>
-                <NavLink to="/createaccount" className="visited:bg-violet-700 text-gray-300 hover:bg-gray-800 hover:text-white hover:border-transparent px-3 py-2 text-md font-medium border-white border-2">+ Create Account</NavLink>
-                {/* Profile dropdown */}
-                {/* <Menu as="div" className="relative ml-3">
+                  <NavLink
+                    to="/login"
+                    className="visited:bg-violet-700 text-gray-300 hover:bg-gray-800 hover:text-white px-3 py-2 text-md font-medium mr-3"
+                  >
+                    Login
+                  </NavLink>
+                  <NavLink
+                    to="/createaccount"
+                    className="visited:bg-violet-700 text-gray-300 hover:bg-gray-800 hover:text-white hover:border-transparent px-3 py-2 text-md font-medium border-white border-2"
+                  >
+                    + Create Account
+                  </NavLink>
+                  {/* Profile dropdown */}
+                  {/* <Menu as="div" className="relative ml-3">
                   <div>
                     <Menu.Button className="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                       <span className="absolute -inset-1.5" />
@@ -130,7 +186,19 @@ export default function NavBar() {
                     </Menu.Items>
                   </Transition>
                 </Menu> */}
-              </div>
+                </div>
+              )}
+              {isSignedIn && (
+                <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+                  <NavLink
+                    to="/"
+                    onClick={handleSignOut}
+                    className="text-gray-300 hover:bg-gray-800 hover:text-white px-3 py-2 text-md font-medium"
+                  >
+                    Sign Out
+                  </NavLink>
+                </div>
+              )}
             </div>
           </div>
 
@@ -142,7 +210,9 @@ export default function NavBar() {
                   as="a"
                   href={item.href}
                   className={classNames(
-                    item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
+                    item.current
+                      ? 'bg-gray-900 text-white'
+                      : 'text-gray-300 hover:bg-gray-700 hover:text-white',
                     'block rounded-md px-3 py-2 text-base font-medium'
                   )}
                   aria-current={item.current ? 'page' : undefined}
@@ -155,5 +225,5 @@ export default function NavBar() {
         </>
       )}
     </Disclosure>
-  )
+  );
 }

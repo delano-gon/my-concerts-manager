@@ -12,7 +12,7 @@ export default function Login() {
 
   // onAuthStateChanged(auth, (user) => {
   //   if (user) {
-  //     console.log('User is signed in'); 
+  //     console.log('User is signed in');
   //   } else {
   //     console.log('User is signed out');
   //   }
@@ -22,22 +22,23 @@ export default function Login() {
     e.preventDefault();
     console.log(email);
     console.log(password);
-    if(!isSigningIn) {
-      
-      doSignInWithEmailAndPassword(email, password).then((userCredential) => {
-        const user = userCredential.user;
-        console.log(user);
-        console.log('User logged in');
-        console.log(userCredential);
-        setIsSigningIn(true);
-      }).catch((error) => {
-        const errorCode = error.code;
-        setErrorMessage(error.message);
-        console.log(errorCode);
-        console.log(errorMessage);
-      })
+    if (!isSigningIn) {
+      doSignInWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+          const user = userCredential.user;
+          console.log(user);
+          console.log('User logged in');
+          console.log(userCredential);
+          setIsSigningIn(true);
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          setErrorMessage(error.message);
+          console.log(errorCode);
+          console.log(errorMessage);
+        });
       setIsSigningIn(false);
-    } 
+    }
     console.log(errorMessage);
   };
 
@@ -80,12 +81,16 @@ export default function Login() {
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
           <form className="space-y-6" action="#" method="POST">
             <div>
-              <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-300">
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium leading-6 text-gray-300"
+              >
                 Email address
               </label>
               <div className="mt-2">
                 <input
-                  value={email || ''} onChange={(e) => setEmail(e.target.value)}
+                  value={email || ''}
+                  onChange={(e) => setEmail(e.target.value)}
                   id="email"
                   name="email"
                   type="email"
@@ -98,18 +103,25 @@ export default function Login() {
 
             <div>
               <div className="flex items-center justify-between">
-                <label htmlFor="password" className="block text-sm font-medium leading-6 text-gray-300">
+                <label
+                  htmlFor="password"
+                  className="block text-sm font-medium leading-6 text-gray-300"
+                >
                   Password
                 </label>
                 <div className="text-sm">
-                  <a href="#" className="font-semibold text-purple-400 hover:text-white">
+                  <a
+                    href="#"
+                    className="font-semibold text-purple-400 hover:text-white"
+                  >
                     Forgot password?
                   </a>
                 </div>
               </div>
               <div className="mt-2">
                 <input
-                  value={password || ''} onChange={(e) => setPassword(e.target.value)}
+                  value={password || ''}
+                  onChange={(e) => setPassword(e.target.value)}
                   id="password"
                   name="password"
                   type="password"
@@ -122,7 +134,9 @@ export default function Login() {
 
             <div>
               <button
-                onClick={(e) => { onSubmit(e) }}
+                onClick={(e) => {
+                  onSubmit(e);
+                }}
                 className="flex w-full justify-center bg-purple-900 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-purple-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-600"
               >
                 Sign in
@@ -132,12 +146,15 @@ export default function Login() {
 
           <p className="mt-10 text-center text-sm text-gray-300">
             Not a member?{' '}
-            <NavLink to="/createaccount" className="font-semibold leading-6 text-purple-400 hover:text-white">
+            <NavLink
+              to="/createaccount"
+              className="font-semibold leading-6 text-purple-400 hover:text-white"
+            >
               Create a free account
             </NavLink>
           </p>
         </div>
       </div>
     </>
-  )
+  );
 }

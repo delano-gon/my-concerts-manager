@@ -1,13 +1,18 @@
 /* eslint-disable react/prop-types */
-// import { useState } from 'react';
-import { auth, db } from '../firebase/firebase';
-import { doc, getDoc } from 'firebase/firestore';
+import { useState, useEffect } from 'react';
+import { onAuthStateChanged } from 'firebase/auth';
+// import { useLoaderData } from 'react-router-dom';
+import { auth } from '../firebase/firebase';
+// import { doc, getDoc } from 'firebase/firestore';
 
 import Card from '../UI/Card';
+// import { set } from 'firebase/database';
 
 // eslint-disable-next-line react/prop-types
 export default function RenderShowList({ shows }) {
-  console.log(shows);
+  // const [userShows, setUserShows] = useState(shows);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  // console.log(shows);
   // const [showList, setShowList] = useState(shows);
 
   // shows.sort((a, b) => {
@@ -35,30 +40,137 @@ export default function RenderShowList({ shows }) {
   // console.log(show.date);
   // console.log(show);
 
-  const user = auth.currentUser;
-  const docRef = doc(db, 'users', user.uid);
-  const fetchData = async () => {
-    const docSnap = await getDoc(docRef);
+  // const user = auth.currentUser;
 
-    if (docSnap.exists()) {
-      console.log('Document data:', docSnap.data());
-    } else {
-      // docSnap.data() will be undefined in this case
-      console.log('No such document!');
-    }
-  };
+  // async function checkForUser() {
+  //   if (user) {
+  //     const showRef = doc(db, 'users', user.uid);
+  //     getDoc(showRef)
+  //       .then((snapshot) => {
+  //         console.log(snapshot.data());
 
-  fetchData();
+  //         // snapshot.data().entries((doc) => {
+  //         //   userShows.push({ ...doc.data(), id: doc.id });
+  //         // });
+  //         snapshot.data().shows.forEach((doc) => {
+  //           userShows.push({ ...doc, id: doc.id });
+  //         });
+  //         console.log(userShows);
 
-  shows.sort((a, b) => {
-    let aDate = a.date.split('/');
-    let bDate = b.date.split('/');
-    return (
-      parseInt(aDate[2]) - parseInt(bDate[2]) ||
-      parseInt(aDate[0]) - parseFloat(bDate[0]) ||
-      parseInt(aDate[1]) - parseInt(bDate[1])
-    );
-  });
+  //         console.log('User is signed in');
+  //         return userShows;
+  //       })
+  //       .catch((error) => {
+  //         console.log(error);
+  //       });
+  //   } else {
+  //     console.log('User is signed out');
+  //     return;
+  //   }
+  // }
+
+  // async function fetchData() {
+  //   checkForUser(user).then((docSnap) => {
+  //     try {
+  //       console.log('Document data:', docSnap.data());
+  //       let userShows = [];
+  //       docSnap.data().forEach((doc) => {
+  //         userShows.push({ ...doc.data(), id: doc.id });
+  //       });
+  //       console.log(userShows);
+  //       return userShows;
+  //     } catch {
+  //       console.log('No such document!');
+  //       return;
+  //     }
+  //   });
+  // }
+
+  // const fetchedShows = await checkForUser();
+  // setUserShows(fetchedShows);
+  // console.log(userShows);
+
+  function sortShows(shows) {
+    shows.sort((a, b) => {
+      let aDate = a.date.split('/');
+      let bDate = b.date.split('/');
+      return (
+        parseInt(aDate[2]) - parseInt(bDate[2]) ||
+        parseInt(aDate[0]) - parseFloat(bDate[0]) ||
+        parseInt(aDate[1]) - parseInt(bDate[1])
+      );
+    });
+  }
+
+  useEffect(() => {
+    let isMounted = true;
+    const fetchData = async () => {
+      try {
+        if (isMounted && shows.length > 0) {
+          console.log(shows);
+          onAuthStateChanged(auth, (user) => {
+            if (user) {
+              console.log('User is signed in');
+              setIsLoggedIn(true);
+            } else {
+              console.log('User is signed out');
+              setIsLoggedIn(false);
+            }
+          });
+          sortShows(shows);
+        } else if (isMounted && shows.length < 1) {
+          
+          return;
+        }
+      } catch (error) {
+        if (isMounted) {
+          console.log(error.message);
+        }
+      }
+    };
+    fetchData();
+    return () => {
+      isMounted = false;
+    };
+  }, [shows, isLoggedIn]);
+
+  // useEffect(() => {
+  //   let isMounted = true;
+  //   async function renderData() {
+  //     try {
+  //       if (isMounted) {
+  //         await sortShows(userShows);
+  //         await setUserShows(shows);
+  //       }
+  //     } catch (error) {
+  //       if (isMounted) {
+  //         console.log(error.message);
+  //       }
+  //     }
+  //   }
+  //   renderData();
+  //   return () => {
+  //     isMounted = false;
+  //   };
+  // }, [shows, userShows]);
+
+  // userShows.sort((a, b) => {
+  //   let aÍDate = a.date.split('/');
+  //   let bDate = b.date.split('/');
+  //   return (
+  //     parseInt(aDate[2]) - parseInt(bDate[2]) ||
+  //     parseInt(aDate[0]) - parseFloat(bDate[0]) ||
+  //     parseInt(aDate[1]) - parseInt(bDate[1])
+  //   );
+  // });
+
+  // if (isLoading) {
+  //   return (
+  //     <Card className="w-full h-60 border-gray-500 border-2 grid grid-cols-1 justify-items-center place-content-center">
+  //       <h2 className="text-white text-5xl font-bold mb-3">Loading...</h2>
+  //     </Card>
+  //   );
+  // }
 
   const noShowsAdded = (
     <Card className="w-full h-60 border-gray-500 border-2 grid grid-cols-1 justify-items-center place-content-center">
@@ -67,10 +179,10 @@ export default function RenderShowList({ shows }) {
       <p className="text-white text-xl mb-6">first show!</p>
     </Card>
   );
-
+  console.log(shows);
   return (
     <div className="grid grid-cols-4 gap-6 pb-20">
-      {!shows.length && noShowsAdded}
+      {(!isLoggedIn || !shows.length) && noShowsAdded}
       {shows.map((show) => (
         <Card key={show.id} className="w-full">
           <h2 className="text-white text-2xl font-bold m-4 mt-6">

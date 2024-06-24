@@ -1,5 +1,5 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-
+import { loader as eventsLoader } from './components/fetchData/fetchData.jsx';
 // import { useState } from 'react';
 
 import RootLayout from './pages/Root.jsx';
@@ -23,9 +23,9 @@ export default function App() {
       children: [
         { path: '/', element: <HomePage /> },
         { path: '/login', element: <LoginPage /> },
-        { path: '/myshows', element: <MyShowsPage /> },
-        { path: '/mycalendar', element: <MyCalendarPage />},
-        { path: '/createaccount', element: <CreateAccount /> }
+        { path: '/myshows', element: <MyShowsPage />, loader: eventsLoader},
+        { path: '/mycalendar', element: <MyCalendarPage /> },
+        { path: '/createaccount', element: <CreateAccount /> },
       ],
     },
   ]);

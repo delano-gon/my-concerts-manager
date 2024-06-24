@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Disclosure } from '@headlessui/react';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 import { NavLink } from 'react-router-dom';
@@ -7,8 +7,6 @@ import { doSignOut } from '../firebase/auth';
 import { onAuthStateChanged } from 'firebase/auth';
 
 // import profileIcon from '../assets/defaultprofileicon.jpg';
-
-
 
 const navigation = [
   { name: 'Summary', href: '/', current: true },
@@ -24,15 +22,29 @@ function classNames(...classes) {
 export default function NavBar() {
   const [isSignedIn, setIsSignedIn] = useState(false);
 
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      console.log('User is signed in'); 
-      setIsSignedIn(true);
-    } else {
-      console.log('User is signed out');
-      setIsSignedIn(false);
+  useEffect(() => {
+    let isMounted = true;
+    try {
+      if (isMounted) {
+        onAuthStateChanged(auth, (user) => {
+          if (user) {
+            console.log('User is signed in');
+            setIsSignedIn(true);
+          } else {
+            console.log('User is signed out');
+            setIsSignedIn(false);
+          }
+        });
+      }
+    } catch (error) {
+      if (isMounted) {
+        console.log(error.message);
+      }
     }
-  });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   function handleSignOut() {
     doSignOut(auth)

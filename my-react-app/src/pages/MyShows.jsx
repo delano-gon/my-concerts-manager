@@ -1,48 +1,98 @@
-import { useState } from 'react';
-import { auth, db } from '../firebase/firebase';
-import { doc, updateDoc, arrayUnion } from 'firebase/firestore';
+import { useEffect, useState } from 'react';
+import { useLoaderData } from 'react-router-dom';
+import { addEvent } from '../components/fetchData/fetchData';
+// import { auth } from '../firebase/firebase';
+// import { doc, updateDoc, arrayUnion } from 'firebase/firestore';
 
 import background from '../assets/ConcertCrowdBGImage.jpg';
 
 import AddShowForm from '../components/AddShowForm';
 import RenderShowList from '../components/RenderShowList';
+// import Error from './Error';
 
 export default function MyShows() {
-  const shows = [
-    // {
-    //   id: 1,
-    //   headliner: 'The Slackers',
-    //   date: '2024-12-31',
-    //   time: '20:00',
-    //   venue: 'The Roxy',
-    // },
-    // {
-    //   id: 2,
-    //   headliner: 'The Toasters',
-    //   date: '2024-09-31',
-    //   time: '19:00',
-    //   venue: 'The Roxy',
-    // },
-  ];
+  // const shows = [
+  //   // {
+  //   //   id: 1,
+  //   //   headliner: 'The Slackers',
+  //   //   date: '2024-12-31',
+  //   //   time: '20:00',
+  //   //   venue: 'The Roxy',
+  //   // },
+  //   // {
+  //   //   id: 2,
+  //   //   headliner: 'The Toasters',
+  //   //   date: '2024-09-31',
+  //   //   time: '19:00',
+  //   //   venue: 'The Roxy',
+  //   // },
+  // ];
 
-  const [showList, setShowList] = useState(shows);
+  const [showList, setShowList] = useState([]);
+  // const [isLoading, setIsLoading] = useState(false);
+  // const [error, setError] = useState(null);
+
+  const events = useLoaderData();
+  console.log(events);
+
+  useEffect(() => {
+    let isMounted = true;
+    const fetchData = async () => {
+      try {
+        if (isMounted && events.shows.length > 0) {
+          
+          setShowList(events.shows);
+        } else if (isMounted && !events.shows.length) {
+          return;
+        }
+      } catch (error) {
+        if (isMounted) {
+          console.log(error.message);
+        }
+      }
+    };
+    fetchData();
+    return () => {
+      isMounted = false;
+    }
+  }, [events, showList]);
+
   
-  const user = auth.currentUser;
-  
+  // useEffect(() => {
+  //   let isMounted = true;
+  //   const fetchData = async () => {
+  //     setIsLoading(true);
+  //     try {
+  //       const user = await auth.currentUser;
+  //       if (user && isMounted) {
+  //         setShowList(events);
+  //       }
+  //     } catch (error) {
+  //       if (isMounted) {
+  //         setShowList([]);
+  //         setError(error.message);
+  //       }
+  //     }
+  //     setIsLoading(false);
+  //   };
+  //   fetchData();
+  //   return () => {
+  //     isMounted = false;
+  //   };
+  // }, [events]);
+
   async function handleSubmit(showInfo) {
     console.log(showInfo);
     const tempShowList = [...showList];
+    console.log(tempShowList);
     tempShowList.push(showInfo);
-    setShowList(tempShowList);
+    console.log(tempShowList);
+    // setShowList(tempShowList);
+    await addEvent(tempShowList);
+    // console.log(showList);
 
-    if (auth.currentUser) {
-      const showRef = doc(db, 'users', user.uid);
-      await updateDoc(showRef, {
-        shows: arrayUnion(showInfo)
-    })
-    
-    }
-    console.log(showInfo);
+
+    console.log(showList);
     // showList.sort((a, b) => {
     //   let aDate = a.date.split('/');
     //   let bDate = b.date.split('/');
@@ -56,10 +106,14 @@ export default function MyShows() {
   }
 
   return (
-    <div className="overflow-hidden px-4 py-12 sm:py-32 md:py-24 lg:overflow-visible lg:px-0 bg-contain bg-fixed bg-black/10 bg-blend-overlay backdrop-grayscale" style={{ backgroundImage: `url(${background})` }}>
+    <div
+      className="overflow-hidden px-4 py-12 sm:py-32 md:py-24 lg:overflow-visible lg:px-0 bg-contain bg-fixed bg-black/10 bg-blend-overlay backdrop-grayscale"
+      style={{ backgroundImage: `url(${background})` }}
+    >
       <div className="grid justify-center space-y-6">
+        {/* {error && <Error message={error} />} */}
         <AddShowForm submitForm={handleSubmit} />
-        <RenderShowList shows={showList} />
+        <RenderShowList shows={showList}/>
       </div>
     </div>
   );

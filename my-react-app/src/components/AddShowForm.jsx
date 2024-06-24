@@ -8,7 +8,6 @@ import MiscInput from './Inputs/MiscInput';
 
 // eslint-disable-next-line react/prop-types
 export default function AddShowForm({ submitForm }) {
-
   const formRef = useRef();
 
   const showInfo = {
@@ -24,16 +23,16 @@ export default function AddShowForm({ submitForm }) {
 
     let hours = event.target[4].value.split(':')[0];
     const AmOrPm = hours >= 12 ? 'PM' : 'AM';
-    hours = (hours % 12) || 12;
+    hours = hours % 12 || 12;
     const minutes = event.target[4].value.split(':')[1];
-    const finalTime = hours + ":" + minutes + " " + AmOrPm;
+    const finalTime = hours + ':' + minutes + ' ' + AmOrPm;
 
     // Changes date format to MM/DD/YYYY
     const date = event.target[3].value.split('-');
     if (date[1][0] === '0') {
       date[1] = date[1][1];
     }
-    const finalDate = date[1] + "/" + date[2] + "/" + date[0];
+    const finalDate = date[1] + '/' + date[2] + '/' + date[0];
 
     showInfo.id = Math.floor(Math.random() * 10000);
     showInfo.headliner = event.target[0].value;
@@ -65,4 +64,3 @@ export default function AddShowForm({ submitForm }) {
     </Card>
   );
 }
-

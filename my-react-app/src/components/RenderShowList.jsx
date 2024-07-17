@@ -1,17 +1,20 @@
 /* eslint-disable react/prop-types */
-import { useState, useEffect } from 'react';
-import { onAuthStateChanged } from 'firebase/auth';
+import { Suspense } from 'react';
 // import { useLoaderData } from 'react-router-dom';
 import { auth } from '../firebase/firebase';
 // import { doc, getDoc } from 'firebase/firestore';
 
 import Card from '../UI/Card';
+import { Await } from 'react-router-dom';
 // import { set } from 'firebase/database';
 
 // eslint-disable-next-line react/prop-types
-export default function RenderShowList({ shows }) {
+export default function RenderShowList({ eventsPromise }) {
   // const [userShows, setUserShows] = useState(shows);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  console.log(eventsPromise);
+  const user = auth.currentUser;
+  console.log(user);
+  // const eventList = Object.keys(events).length || 0;
   // console.log(shows);
   // const [showList, setShowList] = useState(shows);
 
@@ -102,37 +105,70 @@ export default function RenderShowList({ shows }) {
     });
   }
 
-  useEffect(() => {
-    let isMounted = true;
-    const fetchData = async () => {
-      try {
-        if (isMounted && shows.length > 0) {
-          console.log(shows);
-          onAuthStateChanged(auth, (user) => {
-            if (user) {
-              console.log('User is signed in');
-              setIsLoggedIn(true);
-            } else {
-              console.log('User is signed out');
-              setIsLoggedIn(false);
-            }
-          });
-          sortShows(shows);
-        } else if (isMounted && shows.length < 1) {
-          
-          return;
-        }
-      } catch (error) {
-        if (isMounted) {
-          console.log(error.message);
-        }
-      }
-    };
-    fetchData();
-    return () => {
-      isMounted = false;
-    };
-  }, [shows, isLoggedIn]);
+  // onAuthStateChanged(auth, (user) => {
+  //   if (user) {
+  //     console.log('User is signed in');
+  //     setIsLoggedIn(true);
+  //   } else {
+  //     console.log('User is signed out');
+  //     setIsLoggedIn(false);
+  //   }
+  // });
+  // try {
+  //   if (!eventsPromise.events) {
+  //     eventList = 0;
+  //   } else if (eventsPromise.events) {
+  //     eventList = Object.keys(eventsPromise.events).length;
+  //     sortShows(eventsPromise.events);
+  //   }
+  // } catch (error) {
+  //   console.log(error.message);
+  // }
+
+  // useEffect(() => {
+  //   let isMounted = true;
+  //   const fetchData = () => {
+  //     try {
+  //       if (isMounted && eventList > 0) {
+  //         console.log(eventsPromise.shows);
+
+  //         sortShows(eventsPromise.events);
+  //       } else if (isMounted && eventList) {
+  //         console.log('No shows added');
+  //         return;
+  //       }
+  //     } catch (error) {
+  //       if (isMounted) {
+  //         console.log(error.message);
+  //       }
+  //     }
+  //   };
+  //   fetchData();
+  //   return () => {
+  //     isMounted = false;
+  //   };
+  // }, [eventsPromise, eventList, user]);
+
+  function renderShowElements(usersEvents) {
+    try {
+      const userShows = usersEvents.data().shows;
+      sortShows(userShows);
+      const hostShowsEls = userShows.map((show) => (
+        <Card key={show.id} className="w-full">
+          <h2 className="text-white text-2xl font-bold m-4 mt-6">
+            {show.headliner}
+          </h2>
+          {show.coHeadliner && <h3 className="text-white text-xl font-bold m-4">w/ {show.coHeadliner}</h3>}
+          <p className="text-white text-lg ml-4 mb-2">{show.date}</p>
+          <p className="text-white text-md ml-4 mb-2">{`Doors: ${show.time}`}</p>
+          <p className="text-white text-md ml-4 mb-7">{`Venue: ${show.venue}`}</p>
+        </Card>
+      ));
+      return hostShowsEls;
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
 
   // useEffect(() => {
   //   let isMounted = true;
@@ -172,6 +208,14 @@ export default function RenderShowList({ shows }) {
   //   );
   // }
 
+  const accountRequired = (
+    <Card className="w-full h-60 border-gray-500 border-2 grid grid-cols-1 justify-items-center place-content-center">
+      <h2 className="text-white text-5xl font-bold mb-3">+</h2>
+      <p className="text-white text-xl">*Must be signed in</p>
+      <p className="text-white text-xl mb-6">To add events</p>
+    </Card>
+  );
+
   const noShowsAdded = (
     <Card className="w-full h-60 border-gray-500 border-2 grid grid-cols-1 justify-items-center place-content-center">
       <h2 className="text-white text-5xl font-bold mb-3">+</h2>
@@ -179,20 +223,16 @@ export default function RenderShowList({ shows }) {
       <p className="text-white text-xl mb-6">first show!</p>
     </Card>
   );
-  console.log(shows);
+
   return (
-    <div className="grid grid-cols-4 gap-6 pb-20">
-      {(!isLoggedIn || !shows.length) && noShowsAdded}
-      {shows.map((show) => (
-        <Card key={show.id} className="w-full">
-          <h2 className="text-white text-2xl font-bold m-4 mt-6">
-            {show.headliner}
-          </h2>
-          <p className="text-white text-lg ml-4 mb-2">{show.date}</p>
-          <p className="text-white text-md ml-4 mb-2">{`Doors: ${show.time}`}</p>
-          <p className="text-white text-md ml-4 mb-7">{`Venue: ${show.venue}`}</p>
-        </Card>
-      ))}
-    </div>
+    <Suspense fallback={<p style={{ textAlign: 'center' }}>Loading...</p>}>
+      <Await resolve={eventsPromise}>
+        {(resolvedEvents) => <div className="grid grid-cols-4 gap-6 pb-20">
+          {(!user) && accountRequired}
+          {(user && resolvedEvents.data().shows) && noShowsAdded}
+          {user && renderShowElements(resolvedEvents)}
+        </div>}
+      </Await>
+    </Suspense>
   );
 }

@@ -1,11 +1,12 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { auth } from '../../firebase/firebase';
+import { useContext, useState, createContext, useEffect } from 'react';
+import { auth, db } from '../../firebase/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
+import { doc, getDoc } from 'firebase/firestore';
 
-const AuthContext = React.createContext();
+const AuthContext = createContext();
 
 // eslint-disable-next-line react-refresh/only-export-components
-export function useAuth() {
+export function UserAuth() {
   return useContext(AuthContext);
 }
 
@@ -14,14 +15,31 @@ export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState(null);
   const [userLoggedIn, setUserLoggedIn] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [userInfo, setUserInfo] = useState({
+    userName: '',
+    email: '',
+    firstName: '',
+    lastName: '',
+  });
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, initializeUser);
-    return unsubscribe;
-  }, [])
-
+    return () => {
+      unsubscribe();
+    };
+  }, []);
+    
   async function initializeUser(user) {
     if (user) {
+      console.log(user);
+      const showRef = doc(db, 'users', user.uid);
+      const docSnap = await getDoc(showRef);
+      console.log(docSnap.data());
+      setUserInfo({userName: docSnap.data().username, 
+        email: docSnap.data().email, 
+        firstName: docSnap.data().firstName, 
+        lastName: docSnap.data().lastName
+      });
       setCurrentUser({ ...user });
       setUserLoggedIn(true);
     } else {
@@ -34,6 +52,7 @@ export function AuthProvider({ children }) {
   const value = {
     currentUser,
     userLoggedIn,
+    userInfo,
     loading
   }
 

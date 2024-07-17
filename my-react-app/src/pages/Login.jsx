@@ -1,71 +1,30 @@
 import { useState } from 'react';
 import { NavLink, Navigate } from 'react-router-dom';
 import { doSignInWithEmailAndPassword } from '../firebase/auth';
+import { UserAuth } from '../contexts/authContext/index.jsx';
 // import { auth } from '../firebase/firebase';
 // import { onAuthStateChanged } from 'firebase/auth';
 
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [isSigningIn, setIsSigningIn] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
 
-  // onAuthStateChanged(auth, (user) => {
-  //   if (user) {
-  //     console.log('User is signed in');
-  //   } else {
-  //     console.log('User is signed out');
-  //   }
-  // });
+  const { userLoggedIn } = UserAuth();
 
   const onSubmit = async (e) => {
     e.preventDefault();
     console.log(email);
     console.log(password);
-    if (!isSigningIn) {
-      doSignInWithEmailAndPassword(email, password)
-        .then((userCredential) => {
-          const user = userCredential.user;
-          console.log(user);
-          console.log('User logged in');
-          console.log(userCredential);
-          setIsSigningIn(true);
-        })
-        .catch((error) => {
-          const errorCode = error.code;
-          setErrorMessage(error.message);
-          console.log(errorCode);
-          console.log(errorMessage);
-        });
-      setIsSigningIn(false);
+    if (!userLoggedIn) {
+      await doSignInWithEmailAndPassword(email, password)
+    } else {
+      console.log('User is signed out');
     }
-    console.log(errorMessage);
   };
-
-  // const onGoogleSignIn = (e) => {
-  //   e.preventDefault();
-  //   if(!isSigningIn) {
-  //     setIsSigningIn(true);
-  //     try {
-  //       doSignInWithEmailAndPassword(email, password);
-  //     } catch (error) {
-  //       setErrorMessage(error.message);
-  //     }
-  //     setIsSigningIn(false);
-  //   }
-  // };
 
   return (
     <>
-      {/*
-        This example requires updating your template:
-
-        ```
-        <html class="h-full bg-white">
-        <body class="h-full">
-        ```
-      */}
-      {isSigningIn && <Navigate to="/myshows" />}
+      {userLoggedIn && <Navigate to="/myshows" />}
       <div className="flex min-h-screen flex-1 flex-col justify-center px-6 py-6 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <img

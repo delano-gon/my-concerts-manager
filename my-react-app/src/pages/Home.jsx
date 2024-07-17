@@ -37,7 +37,7 @@ export default function Home() {
               <p className="text-base font-semibold leading-7 text-gray-400">Concerts at a glance</p>
               <h1 className="mt-2 text-3xl font-bold tracking-tight text-white sm:text-4xl">Manage your event-planning more effectively</h1>
               <p className="mt-6 text-xl leading-8 text-gray-400">
-                Be a manager who manages their managables with the utmost manageability. We all know you could be better at that. Let us help you.
+                Be a manager who manages their managables with the utmost manageability. We all need help with that. Let us help you.
               </p>
             </div>
           </div>
@@ -53,13 +53,13 @@ export default function Home() {
           <div className="lg:pr-4">
             <div className="max-w-xl text-base leading-7 text-gray-400 lg:max-w-lg">
               <p>
-                Let&apos;s face it, managing concerts is hard. Real hard. You have to keep track of so many artists, times, dates, venues, etc. and it&apos;s easy to get got. Well now you can impress your fellow comrades with your new found manageability.
+                Let&apos;s face it, managing concerts is difficult... You have to keep track of so many artists, times, dates, venues, etc. and getting got is often the outcome, unfortunately. Well, now you can impress your fellow comrades with your new found manageability.
               </p>
               <ul role="list" className="mt-8 space-y-8 text-gray-400">
                 <li className="flex gap-x-3">
                   <PlusIcon className="mt-1 h-6 w-6 flex-none text-purple-500" aria-hidden="true" />
                   <span>
-                    <strong className="font-semibold text-white">Push to deploy.</strong> Lorem ipsum, dolor sit amet
+                    <strong className="font-semibold text-white">Create a free account.</strong> Lorem ipsum, dolor sit amet
                     consectetur adipisicing elit. Maiores impedit perferendis suscipit eaque, iste dolor cupiditate
                     blanditiis ratione.
                   </span>
@@ -67,14 +67,14 @@ export default function Home() {
                 <li className="flex gap-x-3">
                   <LockClosedIcon className="mt-1 h-5 w-5 flex-none text-purple-500" aria-hidden="true" />
                   <span>
-                    <strong className="font-semibold text-white">SSL certificates.</strong> Anim aute id magna aliqua
+                    <strong className="font-semibold text-white">Save upcoming events.</strong> Anim aute id magna aliqua
                     ad ad non deserunt sunt. Qui irure qui lorem cupidatat commodo.
                   </span>
                 </li>
                 <li className="flex gap-x-3">
                   <ServerIcon className="mt-1 h-5 w-5 flex-none text-purple-500" aria-hidden="true" />
                   <span>
-                    <strong className="font-semibold text-white">Database backups.</strong> Ac tincidunt sapien
+                    <strong className="font-semibold text-white">Reference concerts with ease.</strong> Ac tincidunt sapien
                     vehicula erat auctor pellentesque rhoncus. Et magna sit morbi lobortis.
                   </span>
                 </li>
@@ -84,7 +84,7 @@ export default function Home() {
                 fermentum dignissim. Lacus diam tincidunt ac cursus in vel. Mauris varius vulputate et ultrices hac
                 adipiscing egestas. Iaculis convallis ac tempor et ut. Ac lorem vel integer orci.
               </p>
-              <h2 className="mt-16 text-2xl font-bold tracking-tight text-white">No server? No problem.</h2>
+              <h2 className="mt-16 text-2xl font-bold tracking-tight text-white">No rizz? No problem.</h2>
               <p className="mt-6">
                 Id orci tellus laoreet id ac. Dolor, aenean leo, ac etiam consequat in. Convallis arcu ipsum urna nibh.
                 Pharetra, euismod vitae interdum mauris enim, consequat vulputate nibh. Maecenas pellentesque id sed

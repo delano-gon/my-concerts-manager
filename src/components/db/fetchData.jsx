@@ -1,5 +1,5 @@
 import { defer } from 'react-router-dom';
-import { auth, db } from '../../firebase/firebase';
+import { auth, db } from '../../firebase/firebase.js';
 import { doc, getDoc } from 'firebase/firestore';
 
 

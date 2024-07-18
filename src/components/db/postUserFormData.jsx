@@ -1,6 +1,6 @@
-import { auth, db } from '../../firebase/firebase';
+import { auth, db } from '../../firebase/firebase.js';
 import { doc, setDoc } from 'firebase/firestore';
-import { doCreateUserWithEmailAndPassword } from '../../firebase/auth';
+import { doCreateUserWithEmailAndPassword } from '../../firebase/auth.js';
 
 export async function action({ request }) {
   const data = await request.formData();

@@ -1,13 +1,13 @@
 // import { Suspense } from 'react';
 import { useLoaderData, defer } from 'react-router-dom';
 import { doc, getDoc } from 'firebase/firestore';
-import { auth, db } from '../firebase/firebase';
+import { auth, db } from '../firebase/firebase.js';
 import { onAuthStateChanged } from 'firebase/auth';
 
 import background from '../assets/ConcertCrowdBGImage.jpg';
 
-import AddShowForm from '../components/AddShowForm';
-import RenderShowList from '../components/RenderShowList';
+import AddShowForm from '../components/AddShowForm.jsx';
+import RenderShowList from '../components/RenderShowList.jsx';
 
 
 async function eventsLoader() {

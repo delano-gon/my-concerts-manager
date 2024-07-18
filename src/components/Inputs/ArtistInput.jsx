@@ -3,8 +3,6 @@ import Input from './Input.jsx';
 
 export default function ArtistInput() {
   const [addCoHead, setAddCoHead] = useState(false);
-  // const [addArtistsList, setAddArtistsList] = useState([]);
-  // const [addingArtist, setAddingArtist] = useState(false);
 
   const showAddCoHandler = () => {
     setAddCoHead(true);
@@ -45,10 +43,6 @@ export default function ArtistInput() {
     <button className="ml-3 block font-medium cursor-pointer bg-transparent hover:bg-gray-600 text-white font-semibold py-1.5 px-3 border border-white hover:border-transparent" onClick={showAddCoHandler}>
       Add Co-Headliner
     </button>
-    // <label className="ml-3 block font-medium text-slate-800" htmlFor="addCo">
-    //   Add Co-Headliner{' '}
-    //   <input type="checkbox" id="addCo" onClick={showAddCoHandler} />
-    // </label>
   );
 
   const showCoInput = (

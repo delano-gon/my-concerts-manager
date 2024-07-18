@@ -1,8 +1,8 @@
 import { Disclosure } from '@headlessui/react';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 import { NavLink } from 'react-router-dom';
-import { auth } from '../firebase/firebase';
-import { doSignOut } from '../firebase/auth';
+import { auth } from '../firebase/firebase.js';
+import { doSignOut } from '../firebase/auth.js';
 import { UserAuth } from '../contexts/authContext/index.jsx';
 
 const navigation = [

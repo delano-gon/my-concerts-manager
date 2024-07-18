@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { NavLink, Navigate } from 'react-router-dom';
-import { doSignInWithEmailAndPassword } from '../firebase/auth';
+import { doSignInWithEmailAndPassword } from '../firebase/auth.js';
 import { UserAuth } from '../contexts/authContext/index.jsx';
 // import { auth } from '../firebase/firebase';
 // import { onAuthStateChanged } from 'firebase/auth';

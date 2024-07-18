@@ -1,6 +1,5 @@
 {
   "hosting": {
-    "site": "my-concerts-manager-a3477",
     "public": "public",
     "ignore": [
       "firebase.json",

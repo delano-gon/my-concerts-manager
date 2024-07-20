@@ -7,7 +7,10 @@ import { UserAuth } from '../contexts/authContext/index.jsx';
 
 const navigation = [
   { name: 'Summary', href: '/', current: true },
-  { name: 'Add Show', href: '/myshows', current: false }
+  { name: 'Add Show', href: '/myshows', current: false },
+  { name: 'Login', href: '/login', current: false },
+  { name: 'Create Account', href: '/createaccount', current: false },
+
 ];
 
 function classNames(...classes) {
@@ -75,7 +78,7 @@ export default function NavBar() {
                 </div>
               </div>
               {!userLoggedIn && (
-                <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+                <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0 hidden sm:ml-6 sm:block">
                   <NavLink
                     to="/login"
                     className="visited:bg-violet-700 text-gray-300 hover:bg-gray-800 hover:text-white px-3 py-2 text-md font-medium mr-3"

@@ -10,7 +10,7 @@ export default function CreateUser() {
       {userLoggedIn && <Navigate to="/myshows" />}
       <Form
         method="post"
-        className="flex max-w-4xl flex-col justify-center ml-48 px-12 py-6 lg:px-8"
+        className="flex max-w-4xl flex-col justify-center md:ml-12 lg:ml-48 px-12 py-6 md:px-4 lg:px-8"
       >
         <div className="space-y-12">
           <div className="border-b border-gray-500 pb-12">
@@ -25,7 +25,7 @@ export default function CreateUser() {
               share.
             </p>
 
-            <div className="mt-10 grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-2">
+            <div className="mt-10 grid grid-cols-2 gap-x-6 gap-y-8 min-[320px]:grid-cols-1 sm:grid-cols-2">
               <Input
                 label="Username"
                 type="text"
@@ -99,7 +99,7 @@ export default function CreateUser() {
               Private information that only you can see.
             </p>
 
-            <div className="mt-10 grid grid-cols-2 grid-rows-3 gap-x-6 gap-y-8 sm:grid-cols-2">
+            <div className="mt-10 grid grid-cols-2 grid-rows-3 gap-x-6 gap-y-8 min-[320px]:grid-cols-1 sm:grid-cols-2">
               <Input
                 label="First Name"
                 type="text"
@@ -116,7 +116,7 @@ export default function CreateUser() {
                 className="block w-full bg-transparent border-0 p-1.5 pl-3 text-gray-300 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 required
               />
-              <div className="row-start-2">
+              <div className="sm:row-start-2">
                 <Input
                   label="Email"
                   type="email"
@@ -126,7 +126,7 @@ export default function CreateUser() {
                   required
                 />
               </div>
-              <div className="row-start-3">
+              <div className="sm:row-start-3">
                 <Input
                   label="Password"
                   type="password"

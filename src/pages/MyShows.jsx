@@ -48,7 +48,7 @@ export default function MyShows() {
       className="overflow-hidden px-4 py-12 sm:py-32 md:py-24 lg:overflow-visible lg:px-0 bg-contain bg-fixed bg-black/10 bg-blend-overlay backdrop-grayscale"
       style={{ backgroundImage: `url(${background})` }}
     >
-      <div className="grid justify-center space-y-6">
+      <div className="grid justify-center space-y-6 lg:mx-4">
         <AddShowForm />
         <RenderShowList eventsPromise={eventsPromise.events} />
       </div>

@@ -62,9 +62,9 @@ export default function RenderShowList({ eventsPromise }) {
   return (
     <Suspense fallback={<p style={{ textAlign: 'center' }}>Loading...</p>}>
       <Await resolve={eventsPromise}>
-        {(resolvedEvents) => <div className="grid grid-cols-4 gap-6 pb-20">
+        {(resolvedEvents) => <div className="grid lg:grid-cols-4 md:grid-cols-2 min-[320px]:grid-cols-1 gap-6 pb-20">
           {(!user) && accountRequired}
-          {(user && resolvedEvents.data().shows) && noShowsAdded}
+          {(user && !resolvedEvents.data().shows) && noShowsAdded}
           {user && renderShowElements(resolvedEvents)}
         </div>}
       </Await>

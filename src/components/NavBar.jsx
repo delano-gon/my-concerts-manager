@@ -5,22 +5,43 @@ import { auth } from '../firebase/firebase.js';
 import { doSignOut } from '../firebase/auth.js';
 import { UserAuth } from '../contexts/authContext/index.jsx';
 
-const navigation = [
-  { name: 'Summary', href: '/', current: true },
-  { name: 'Add Show', href: '/myshows', current: false },
-  { name: 'Login', href: '/login', current: false },
-  { name: 'Create Account', href: '/createaccount', current: false },
-
-];
-
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
 }
 
 export default function NavBar() {
+  // const navigation = [
+  //   { name: 'Summary', href: '/', current: true },
+  //   { name: 'Add Show', href: '/myshows', current: false },
+  //   { name: 'Login', href: '/login', current: false },
+  //   { name: 'Create Account', href: '/createaccount', current: false },
+
+  // ];
 
   const { userLoggedIn, userInfo } = UserAuth();
   console.log(auth.currentUser);
+
+  let navigation = [];
+
+  if (userLoggedIn) {
+    navigation = [
+      { name: 'Summary', href: '/', current: true },
+      { name: 'Add Show', href: '/myshows', current: false },
+      {
+        name: 'My Account',
+        href: `/myaccount/${userInfo.userName}`,
+        current: false,
+      },
+      { name: 'Sign Out', href: '/', current: false, signout: true },
+    ];
+  } else {
+    navigation = [
+      { name: 'Summary', href: '/', current: true },
+      { name: 'Add Show', href: '/myshows', current: false },
+      { name: 'Login', href: '/login', current: false },
+      { name: 'Create Account', href: '/createaccount', current: false },
+    ];
+  }
 
   function handleSignOut() {
     doSignOut(auth)
@@ -73,7 +94,6 @@ export default function NavBar() {
                     >
                       Add Show
                     </NavLink>
-                    
                   </div>
                 </div>
               </div>
@@ -94,7 +114,7 @@ export default function NavBar() {
                 </div>
               )}
               {userLoggedIn && (
-                <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+                <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0 hidden sm:block">
                   <NavLink
                     to={`/myaccount/${userInfo.userName}`}
                     className="text-gray-300 hover:bg-gray-800 hover:text-white px-3 py-2 text-md font-medium"
@@ -120,12 +140,13 @@ export default function NavBar() {
                   key={item.name}
                   as="a"
                   href={item.href}
-                  className={classNames(
-                    item.current
+                  className={classNames
+                    (item.current
                       ? 'bg-gray-900 text-white'
                       : 'text-gray-300 hover:bg-gray-700 hover:text-white',
                     'block rounded-md px-3 py-2 text-base font-medium'
                   )}
+                  onClick={item.signout ? handleSignOut : false}
                   aria-current={item.current ? 'page' : undefined}
                 >
                   {item.name}
